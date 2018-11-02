@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:bmi_calculator/models/gender.dart';
 import 'package:bmi_calculator/components/cardTitle.dart';
+import 'package:bmi_calculator/components/genderCard/genderIconTranslated.dart';
+import 'package:bmi_calculator/components/genderCard/genderArrow.dart';
+import 'package:bmi_calculator/components/genderCard/genderCircle.dart';
 import 'package:bmi_calculator/utils/widget_utils.dart' show screenAwareSize;
+import 'package:bmi_calculator/components/genderCard/utils.dart' show genderAngles;
 
-double _circleSize(BuildContext context) => screenAwareSize(80.0, context);
 
 class GenderCard extends StatefulWidget {
   final Gender initialGender;
@@ -19,6 +22,9 @@ class _GenderCardState extends State<GenderCard> {
     alignment: Alignment.bottomCenter,
     children: <Widget>[
       _drawCircleIndicator(),
+      GenderIconTranslated(gender: Gender.female),
+      GenderIconTranslated(gender: Gender.other),
+      GenderIconTranslated(gender: Gender.male),
     ],
   );
 
@@ -26,6 +32,7 @@ class _GenderCardState extends State<GenderCard> {
     alignment: Alignment.center,
     children: <Widget>[
       GenderCircle(),
+      GenderArrow(angle: genderAngles[Gender.female]),
     ],
   );
 
@@ -50,16 +57,4 @@ class _GenderCardState extends State<GenderCard> {
       ),
     );
   }
-}
-
-class GenderCircle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) => Container(
-    width: _circleSize(context),
-    height: _circleSize(context),
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: Color.fromRGBO(244, 244, 244, 1.0),
-    ),
-  );
 }
