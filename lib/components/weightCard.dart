@@ -23,10 +23,7 @@ class _WeightCardState extends State<WeightCard> {
           maxValue: 110,
           width: constraints.maxWidth,
           value: weight,
-          onChanged: (value) {
-            print('onChanged actual value: ${value.toString()}');
-            setState(() => weight = value);
-          },
+          onChanged: (value) => setState(() => weight = value),
         ),
       ),
     );
