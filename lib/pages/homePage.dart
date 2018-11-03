@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bmi_calculator/components/genderCard.dart';
 import 'package:bmi_calculator/components/weightCard.dart';
+import 'package:bmi_calculator/components/heightCard.dart';
 import 'package:bmi_calculator/models/gender.dart';
 import 'package:bmi_calculator/utils/widget_utils.dart' show screenAwareSize;
 
@@ -38,7 +39,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: _tempCard("Height"))
+          Expanded(child: HeightCard(initialHeight: 170))
         ],
       ),
     );
