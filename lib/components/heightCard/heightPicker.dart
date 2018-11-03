@@ -17,7 +17,7 @@ class HeightPicker extends StatefulWidget {
         this.height,
         this.widgetHeight,
         this.onChange,
-        this.maxHeight = 190,
+        this.maxHeight = 210,
         this.minHeight = 145})
       : super(key: key);
 
@@ -28,6 +28,8 @@ class HeightPicker extends StatefulWidget {
 }
 
 class _HeightPickerState extends State<HeightPicker> {
+  double startDragYOffset;
+  int startDragHeight;
 
   double get _pixelsPerUnit {
     return _drawingHeight / widget.totalUnits;
@@ -116,10 +118,29 @@ class _HeightPickerState extends State<HeightPicker> {
     return height;
   }
 
+  _onDragStart(DragStartDetails dragStartDetails) {
+    int newHeight = _globalOffsetToHeight(dragStartDetails.globalPosition);
+    widget.onChange(newHeight);
+    setState(() {
+      startDragYOffset = dragStartDetails.globalPosition.dy;
+      startDragHeight = newHeight;
+    });
+  }
+
+  _onDragUpdate(DragUpdateDetails dragUpdateDetails) {
+    double currentYOffset = dragUpdateDetails.globalPosition.dy;
+    double verticalDifference = startDragYOffset - currentYOffset;
+    int diffHeight = verticalDifference ~/ _pixelsPerUnit;
+    int height = _normalizeHeight(startDragHeight + diffHeight);
+    setState(() => widget.onChange(height));
+  }
+
   @override
   Widget build(BuildContext context) => GestureDetector(
     behavior: HitTestBehavior.translucent,
     onTapDown: _onTapDown,
+    onVerticalDragStart: _onDragStart,
+    onVerticalDragUpdate: _onDragUpdate,
     child: Stack(
       children: <Widget>[
         _drawPersonImage(),
