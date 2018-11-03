@@ -92,11 +92,15 @@ class WeightSlider extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final int value = _indexToValue(index);
         bool isExtra = index == 0 || index == itemCount - 1;
-        return isExtra ? new Container() : FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            '${value}',
-            style: _getTextStyle(value),
+        return isExtra ? new Container() : GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => _animateTo(value, durationMillis: 50),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${value}',
+              style: _getTextStyle(value),
+            ),
           ),
         );
       }
