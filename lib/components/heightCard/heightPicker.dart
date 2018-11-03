@@ -3,6 +3,7 @@ import 'package:bmi_calculator/utils/widget_utils.dart';
 import 'package:bmi_calculator/components/heightCard/height_styles.dart';
 import 'package:bmi_calculator/components/heightCard/heightSlider.dart';
 import 'package:flutter_svg/svg.dart';
+import 'dart:math' as math;
 
 class HeightPicker extends StatefulWidget {
   final int maxHeight;
@@ -97,13 +98,34 @@ class _HeightPickerState extends State<HeightPicker> {
     );
   }
 
+  _onTapDown(TapDownDetails tapDownDetails) {
+    int height = _globalOffsetToHeight(tapDownDetails.globalPosition);
+    widget.onChange(_normalizeHeight(height));
+  }
+
+  int _normalizeHeight(int height) {
+    return math.max(widget.minHeight, math.min(widget.maxHeight, height));
+  }
+
+  int _globalOffsetToHeight(Offset globalOffset) {
+    RenderBox getBox = context.findRenderObject();
+    Offset localPosition = getBox.globalToLocal(globalOffset);
+    double dy = localPosition.dy;
+    dy = dy - marginTopAdapted(context) - labelsFontSize / 2;
+    int height = widget.maxHeight - (dy ~/ _pixelsPerUnit);
+    return height;
+  }
 
   @override
-  Widget build(BuildContext context) => Stack(
-    children: <Widget>[
-      _drawPersonImage(),
-      _drawSlider(),
-      _drawLabels(),
-    ],
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.translucent,
+    onTapDown: _onTapDown,
+    child: Stack(
+      children: <Widget>[
+        _drawPersonImage(),
+        _drawSlider(),
+        _drawLabels(),
+      ],
+    ),
   );
 }
